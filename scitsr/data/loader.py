@@ -107,7 +107,8 @@ class TableDataset(Dataset):
         dataset, cells = [], []
         if exts is None: exts = ['chunk', 'rel']
         if with_cells:
-            exts.append('json')
+            #exts.append('json') # See : https://github.com/Academic-Hammer/SciTSR/issues/17#issuecomment-653886293
+            exts.append('structure')
         sub_paths = self.get_sub_paths(dataset_dir, exts, trim=trim)
         for i, paths in enumerate(sub_paths):
             if debug and i > 50:
@@ -195,8 +196,10 @@ class TableDataset(Dataset):
             sub_paths = [os.path.join(sub_dirs[0], file_name)]
             name = os.path.splitext(file_name)[0]
             for ext in sub_names[1:]:
-                sub_path = os.path.join(root_dir, ext, name + '.' + ext)
-                assert os.path.exists(sub_path)
+                #sub_path = os.path.join(root_dir, ext, name + '.' + ext)
+                ext_fix = 'json' if ext=='structure' else ext
+                sub_path = os.path.join(root_dir, ext, name + '.' + ext_fix)
+                assert os.path.exists(sub_path), '"%s" is not dir.' % sub_path
                 sub_paths.append(sub_path)
             paths.append(sub_paths)
         

@@ -5,6 +5,8 @@ Date Created: March 21, 2019
 Modified by: Heng-Da Xu <dadamrxx@gmail.com>, Zewen
 Date Modified: March 23, 2019
 """
+import json
+
 import torch
 from tqdm import tqdm
 
@@ -144,36 +146,43 @@ class Trainer:
 
             
 def patch_chunks(dataset_folder):
-	"""
-	To patch the all chunk files of the train & test dataset that have the problem of duplicate last character
-	of the last cell in all chunk files
-	:param dataset_folder: train dataset path
-	:return: 1
-	"""
-	import os
-	import shutil
-	from pathlib import Path
+  """
+  To patch the all chunk files of the train & test dataset that have the problem of duplicate last character
+  of the last cell in all chunk files
+  :param dataset_folder: train dataset path
+  :return: 1
+  """
+  import os
+  import shutil
+  from pathlib import Path
+  
+  if os.path.isdir( os.path.join(dataset_folder, "chunk-old") ):
+    print("Input files already patched")
+    return 1 # Already done
 
-	shutil.move(os.path.join(dataset_folder, "chunk"), os.path.join(dataset_folder, "chunk-old"))
-	dir_ = Path(os.path.join(dataset_folder, "chunk-old"))
-	os.makedirs(os.path.join(dataset_folder, "chunk"), exist_ok=True)
+  shutil.move(os.path.join(dataset_folder, "chunk"), os.path.join(dataset_folder, "chunk-old"))
+  dir_ = Path(os.path.join(dataset_folder, "chunk-old"))
+  os.makedirs(os.path.join(dataset_folder, "chunk"), exist_ok=True)
 
-	for chunk_path in dir_.iterdir():
-		# print(chunk_path)
-		with open(str(chunk_path), encoding="utf-8") as f:
-			chunks = json.load(f)['chunks']
-		chunks[-1]['text'] = chunks[-1]['text'][:-1]
+  for chunk_path in dir_.iterdir():
+    # print(chunk_path)
+    with open(str(chunk_path), encoding="utf-8") as f:
+      chunks = json.load(f)['chunks']
+    chunks[-1]['text'] = chunks[-1]['text'][:-1]
 
-		with open(str(chunk_path).replace("chunk-old", "chunk"), "w", encoding="utf-8") as ofile:
-			json.dump({"chunks": chunks}, ofile)
-	print("Input files patched, ready for the use")
-	return 1
+    with open(str(chunk_path).replace("chunk-old", "chunk"), "w", encoding="utf-8") as ofile:
+      json.dump({"chunks": chunks}, ofile)
+  print("Input files patched, ready for the use")
+  return 1
 
 
 if __name__ == '__main__':
 
-    train_path = "/path/to/train_folder"
-    test_path = "/path/to/test_folder/"
+    #train_path = "/path/to/train_folder"
+    #test_path = "/path/to/test_folder/"
+    train_path = "./dataset/SciTSR/train"
+    test_path = "./dataset/SciTSR/test"
+
     patch_chunks(train_path)
     patch_chunks(test_path)
     
@@ -194,7 +203,9 @@ if __name__ == '__main__':
     #hidden_size = 64
     hidden_size = 4
     n_blocks = 3
-    n_epochs = 15
+    #n_epochs = 15  # Original
+    n_epochs = 5   # Gets to t_acc=0.980   # in 20mins
+    #n_epochs = 1   # Gets to t_acc=0.973  # in a few minutes
     learning_rate = 0.0005
     weight_clipping = 1
     weight_decay = 1e-4

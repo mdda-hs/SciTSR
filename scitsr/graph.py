@@ -39,7 +39,8 @@ class Vertex(object):
       "relative y1": self.chunk.y1 / self.tab_h,
       "relative y2": self.chunk.y2  / self.tab_h,
       "relative x center": (self.chunk.x1 + self.chunk.x2) / 2 / self.tab_w,
-      "relative y center": (self.chunk.y2 + self.chunk.y2) / 2 / self.tab_h,
+      #"relative y center": (self.chunk.y2 + self.chunk.y2) / 2 / self.tab_h,
+      "relative y center": (self.chunk.y1 + self.chunk.y2) / 2 / self.tab_h,  # FIXED
       "height of chunk": self.chunk.y2 - self.chunk.y1,
       "width of chunk": self.chunk.x2 - self.chunk.x1
     }

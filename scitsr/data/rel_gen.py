@@ -50,7 +50,8 @@ def match(src:dict, trg:dict, src_chunks, trg_chunks, fid):
   return sid2tid
 
 
-def chunks2rel(ds_dir, rel_dir, chunk_ds="chunk", cell_ds="json"):
+#def chunks2rel(ds_dir, rel_dir, chunk_ds="chunk", cell_ds="json"):
+def chunks2rel(ds_dir, rel_dir, chunk_ds="chunk", cell_ds="structure"):
   if os.path.exists(rel_dir):
     print("%s exists." % rel_dir)
     return
@@ -91,8 +92,11 @@ def chunks2rel(ds_dir, rel_dir, chunk_ds="chunk", cell_ds="json"):
 
 if __name__ == "__main__":
   chunks2rel(
-    ds_dir="/path/to/scitsr", 
-    rel_dir="/path/to/scitsr/rel",
+    #ds_dir="/path/to/scitsr", 
+    #rel_dir="/path/to/scitsr/rel",
+    ds_dir="./dataset/SciTSR/test", 
+    rel_dir="./dataset/SciTSR/test/rel",
     chunk_ds="chunk",
-    cell_ds="json"
+    #cell_ds="json",
+    cell_ds="structure",
   )
